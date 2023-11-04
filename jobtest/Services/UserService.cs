@@ -1,3 +1,4 @@
+using AutoMapper;
 using jobtest.Models;
 using jobtest.Repositories;
 
@@ -6,10 +7,12 @@ namespace jobtest.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IMapper _mapper;
 
-    public UserService(IUserRepository userRepository)
+    public UserService(IUserRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
+        _mapper = mapper;
     }
 
     public async Task<User?> GetUserByIdAsync(Guid id)
@@ -29,12 +32,7 @@ public class UserService : IUserService
 
     public async Task<Guid> CreateUserAsync(UserDTO user)
     {
-        // automapper
-        var newUser = new User
-        {
-            Name = user.Name,
-            Email = user.Email
-        };
+        var newUser = _mapper.Map<User>(user);
         return await _userRepository.CreateUserAsync(newUser);
     }
 
@@ -45,9 +43,7 @@ public class UserService : IUserService
         {
             throw new Exception("User not found");
         }
-        // automapper
-        existingUser.Name = user.Name;
-        existingUser.Email = user.Email;
+        _mapper.Map(user, existingUser);
         await _userRepository.UpdateUserAsync(existingUser);
     }
 
