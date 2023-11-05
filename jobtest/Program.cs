@@ -1,4 +1,5 @@
 using jobtest.DbContext;
+using jobtest.Models;
 using jobtest.Repositories;
 using jobtest.Services;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRepository<User>, Repository<User>>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer();
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

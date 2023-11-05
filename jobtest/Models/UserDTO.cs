@@ -13,5 +13,6 @@ public class UserDTO
     public string Email { get; set; } = string.Empty;
     [Required]
     [Phone]
+    [MaxLength(12)]
     public string Phone { get; set; } = string.Empty;
 }
